@@ -10,15 +10,16 @@ class CorsMiddleware {
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next) {
 
         if ($request->getHeader('Origin')) {
-            $response = $response->withHeader('Access-Control-Allow-Origin', $this->_allowOrigin($request))
-                ->withHeader('Access-Control-Allow-Credentials', 'true')
-                ->withHeader('Access-Control-Max-Age', '0');    // no cache
-                // ->withHeader('Access-Control-Max-Age', '86400');    // cache for 1 day
+            $response = $response
+                ->withHeader('Access-Control-Allow-Origin', $this->_allowOrigin($request))
+                ->withHeader('Access-Control-Allow-Credentials', $this->_allowCredentials())
+                ->withHeader('Access-Control-Max-Age', $this->_maxAge());
 
             if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-                $method  = $request->getHeader('Access-Control-Request-Method');
-                $response = $response->withHeader('Access-Control-Allow-Headers', $request->getHeader('Access-Control-Request-Headers'))
-                    ->withHeader('Access-Control-Allow-Methods', empty($method) ? 'GET, POST, PUT, DELETE' : $method);
+                $response = $response
+                    ->withHeader('Access-Control-Allow-Headers', $this->_allowHeaders($request))
+                    ->withHeader('Access-Control-Allow-Methods', $this->_allowMethods())
+                    ->withHeader('Access-Control-Expose-Headers', $this->_exposeHeaders());
 
                 return $response;
             }
@@ -48,5 +49,38 @@ class CorsMiddleware {
         }
 
         return (string) $allowOrigin;
+    }
+
+    private function _allowCredentials() {
+        return (Configure::read('Cors.AllowCredentials')) ? 'true' : 'false';
+    }
+
+    private function _allowMethods() {
+        return implode(', ', (array) Configure::read('Cors.AllowMethods'));
+    }
+
+    private function _allowHeaders($request) {
+        $allowHeaders = Configure::read('Cors.AllowHeaders');
+
+        if ($allowHeaders === true) {
+            return $request->getHeader('Access-Control-Request-Headers');
+        }
+
+        return implode(', ', (array) $allowHeaders);
+    }
+
+    private function _exposeHeaders() {
+        $exposeHeaders = Configure::read('Cors.ExposeHeaders');
+
+        if (is_string($exposeHeaders) || is_array($exposeHeaders)) {
+            return implode(', ', (array) $exposeHeaders);
+        }
+
+        return '';
+    }
+
+    private function _maxAge() {
+        $maxAge = (string) Configure::read('Cors.MaxAge');
+        return ($maxAge) ?: '0';
     }
 }
