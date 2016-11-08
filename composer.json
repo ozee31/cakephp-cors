@@ -1,0 +1,23 @@
+{
+    "name": "ozee31/cakephp-cors",
+    "description": "A CakePHP (3.3.x) plugin for activate cors domain in your application",
+    "type": "cakephp-plugin",
+    "require": {
+        "php": ">=5.5.9",
+        "cakephp/cakephp": ">=3.3.2 <4.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Cors\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Cors\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    }
+}
