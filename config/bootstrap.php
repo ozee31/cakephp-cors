@@ -10,10 +10,10 @@ Configure::load('Cors.default', 'default');
 
 $defaultConfig = (array) Configure::consume('Cors-default');
 $personnalConfig = (array) Configure::consume('Cors');
+$config = array_merge($defaultConfig, $personnalConfig);
 
-Configure::write('Cors', array_merge($defaultConfig, $personnalConfig));
-
-debug(Configure::read('Cors'));
+Configure::write('Cors', $config);
+Configure::write('Error.exceptionRenderer', $config['exceptionRenderer']);
 
 /**
  * Middleware

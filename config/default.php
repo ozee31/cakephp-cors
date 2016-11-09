@@ -7,5 +7,6 @@ return [
         'AllowHeaders' => true,
         'ExposeHeaders' => false,
         'MaxAge' => 86400, // 1 day
+        'exceptionRenderer' => 'Cors\Error\AppExceptionRenderer',
     ]
 ];
