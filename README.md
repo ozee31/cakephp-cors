@@ -1,6 +1,6 @@
 # cakephp-cors
 
-A CakePHP (3.3.x) plugin for activate cors domain in your application.
+A CakePHP (3.3.x) plugin for activate cors domain in your application. (Use Middleware)
 
 [Learn more about CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
 
