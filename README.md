@@ -95,7 +95,7 @@ The Access-Control-Allow-Credentials header Indicates whether or not the respons
     // string
     'AllowMethods' => 'POST',
     // OR array
-    'AllowCredentials' => ['GET', 'POST'],
+    'AllowMethods' => ['GET', 'POST'],
 ]
 ```
 
