@@ -1,12 +1,12 @@
 <?php
 namespace Cors\Error;
 
-use Cors\Controller\ErrorController;
 use Cake\Error\ExceptionRenderer;
 use Cake\Routing\Router;
 use Cake\Network\Request;
 use Cake\Network\Response;
 use Cake\Event\Event;
+use Cake\Core\Configure;
 use Exception;
 
 class AppExceptionRenderer extends ExceptionRenderer {
@@ -17,8 +17,10 @@ class AppExceptionRenderer extends ExceptionRenderer {
         }
         $response = new Response();
 
+        $errorController = Configure::read('Cors.ErrorController');
+
         try {
-            $controller = new ErrorController($request, $response);
+            $controller = new $errorController($request, $response);
             $controller->startupProcess();
             $startup = true;
         } catch (Exception $e) {
