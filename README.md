@@ -155,3 +155,16 @@ The  Access-Control-Max-Age header indicates how long the results of a preflight
 This option overload default `exceptionRenderer` in `app.php`.
 
 [Read more](http://book.cakephp.org/3.0/en/development/errors.html#extend-the-baseerrorhandler)
+
+#### ErrorController
+
+By default, the plugin use an ErrorController (`Cors\Controller\ErrorController`) which extends from `App\Controller\ErrorController`.
+
+If you do not want this, you can change this option but it is recommended to add this code in your personal ErrorController
+
+```PHP
+public function beforeRender(Event $event) {
+    // ...
+    $this->response->header(['Access-Control-Allow-Origin' => '*']);
+}
+```
