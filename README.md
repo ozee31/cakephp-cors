@@ -44,6 +44,7 @@ By default the plugin authorize cors for all origins, all methods and all header
     'ExposeHeaders' => false, // don't accept personal headers
     'MaxAge' => 86400, // cache for 1 day
     'exceptionRenderer' => 'Cors\Error\AppExceptionRenderer', // Use ExeptionRenderer class of plugin
+    'ErrorController' => 'Cors\Controller\ErrorController', // Use ErrorController class of plugin
 ]
 ```
 
