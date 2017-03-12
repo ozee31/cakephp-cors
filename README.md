@@ -39,7 +39,7 @@ By default the plugin authorize cors for all origins, all methods and all header
 [
     'AllowOrigin' => true, // accept all origin
     'AllowCredentials' => true,
-    'AllowMethods' => ['GET', 'POST', 'PUT', 'DELETE'], // accept all HTTP methods
+    'AllowMethods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], // accept all HTTP methods
     'AllowHeaders' => true, // accept all headers
     'ExposeHeaders' => false, // don't accept personal headers
     'MaxAge' => 86400, // cache for 1 day
