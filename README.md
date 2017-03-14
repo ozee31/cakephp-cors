@@ -6,7 +6,7 @@ A CakePHP (3.3.x) plugin for activate cors domain in your application with [Midd
 
 ## Requirements
 
-- PHP version 5.4.16 or higher
+- PHP version 5.6 or higher
 - CakePhp 3.3 or higher
 
 ## Installation
