@@ -7,7 +7,7 @@
         "cakephp/cakephp": ">=3.3.2 <4.0.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "*"
+        "phpunit/phpunit": "5.*"
     },
     "autoload": {
         "psr-4": {
