@@ -1,12 +1,16 @@
 <?php
 namespace Cors\Routing\Middleware;
 
+use Cake\Core\Configure;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Cake\Core\Configure;
 
-class CorsMiddleware {
+class CorsMiddleware
+{
 
+    /**
+     * PHPCS docblock fix needed!
+     */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next) {
 
         if ($request->getHeader('Origin')) {
@@ -28,6 +32,9 @@ class CorsMiddleware {
         return $next($request, $response);
     }
 
+    /**
+     * PHPCS docblock fix needed!
+     */
     private function _allowOrigin($request) {
         $allowOrigin = Configure::read('Cors.AllowOrigin');
         $origin = $request->getHeader('Origin');
@@ -48,17 +55,26 @@ class CorsMiddleware {
             return '';
         }
 
-        return (string) $allowOrigin;
+        return (string)$allowOrigin;
     }
 
+    /**
+     * PHPCS docblock fix needed!
+     */
     private function _allowCredentials() {
         return (Configure::read('Cors.AllowCredentials')) ? 'true' : 'false';
     }
 
+    /**
+     * PHPCS docblock fix needed!
+     */
     private function _allowMethods() {
         return implode(', ', (array) Configure::read('Cors.AllowMethods'));
     }
 
+    /**
+     * PHPCS docblock fix needed!
+     */
     private function _allowHeaders($request) {
         $allowHeaders = Configure::read('Cors.AllowHeaders');
 
@@ -69,6 +85,9 @@ class CorsMiddleware {
         return implode(', ', (array) $allowHeaders);
     }
 
+    /**
+     * PHPCS docblock fix needed!
+     */
     private function _exposeHeaders() {
         $exposeHeaders = Configure::read('Cors.ExposeHeaders');
 
@@ -79,8 +98,12 @@ class CorsMiddleware {
         return '';
     }
 
+    /**
+     * PHPCS docblock fix needed!
+     */
     private function _maxAge() {
         $maxAge = (string) Configure::read('Cors.MaxAge');
+
         return ($maxAge) ?: '0';
     }
 }

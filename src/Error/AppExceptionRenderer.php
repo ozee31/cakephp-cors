@@ -1,17 +1,24 @@
 <?php
 namespace Cors\Error;
 
+use Cake\Core\Configure;
 use Cake\Error\ExceptionRenderer;
-use Cake\Routing\Router;
+use Cake\Event\Event;
 use Cake\Network\Request;
 use Cake\Network\Response;
-use Cake\Event\Event;
-use Cake\Core\Configure;
+use Cake\Routing\Router;
 use Exception;
 
-class AppExceptionRenderer extends ExceptionRenderer {
+class AppExceptionRenderer extends ExceptionRenderer
+{
 
-    protected function _getController() {
+    /**
+     * Returns the current controller.
+     *
+     * @return \Cake\Controller\Controller
+     */
+    protected function _getController()
+    {
         if (!$request = Router::getRequest(true)) {
             $request = Request::createFromGlobals();
         }
