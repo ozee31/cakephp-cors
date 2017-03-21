@@ -12,14 +12,13 @@ class CorsMiddleware
      * PHPCS docblock fix needed!
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next) {
-
         if ($request->getHeader('Origin')) {
             $response = $response
                 ->withHeader('Access-Control-Allow-Origin', $this->_allowOrigin($request))
                 ->withHeader('Access-Control-Allow-Credentials', $this->_allowCredentials())
                 ->withHeader('Access-Control-Max-Age', $this->_maxAge());
 
-            if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+            if ($request->is('options')) {
                 $response = $response
                     ->withHeader('Access-Control-Allow-Headers', $this->_allowHeaders($request))
                     ->withHeader('Access-Control-Allow-Methods', $this->_allowMethods())
@@ -39,7 +38,7 @@ class CorsMiddleware
         $allowOrigin = Configure::read('Cors.AllowOrigin');
         $origin = $request->getHeader('Origin');
 
-        if ($allowOrigin === true) {
+        if ($allowOrigin === true || $allowOrigin === '*') {
             return $origin;
         }
 
