@@ -13,7 +13,10 @@ $personnalConfig = (array) Configure::consume('Cors');
 $config = array_merge($defaultConfig, $personnalConfig);
 
 Configure::write('Cors', $config);
-Configure::write('Error.exceptionRenderer', $config['exceptionRenderer']);
+
+if ($config['exceptionRenderer']) {
+    Configure::write('Error.exceptionRenderer', $config['exceptionRenderer']);
+}
 
 /**
  * Middleware

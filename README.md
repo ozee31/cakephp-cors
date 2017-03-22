@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/ozee31/cakephp-cors.svg?branch=master)](https://travis-ci.org/ozee31/cakephp-cors)
 
-A CakePHP (3.3.x) plugin for activate cors domain in your application with [Middleware](http://book.cakephp.org/3.0/en/controllers/middleware.html).
+A CakePHP (3.3+) plugin for activate cors domain in your application with [Middleware](http://book.cakephp.org/3.0/en/controllers/middleware.html).
 
 [Learn more about CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
 
@@ -157,6 +157,16 @@ The  Access-Control-Max-Age header indicates how long the results of a preflight
 
 This option overload default `exceptionRenderer` in `app.php`.
 
+If you don't want to overload exceptionRenderer, You must write
+
+```PHP
+'Cors' => [
+	'exceptionRenderer' => false
+]
+```
+
+But you must read https://github.com/ozee31/cakephp-cors#errorcontroller
+
 [Read more](http://book.cakephp.org/3.0/en/development/errors.html#extend-the-baseerrorhandler)
 
 #### ErrorController
@@ -168,6 +178,6 @@ If you do not want this, you can change this option but it is recommended to add
 ```PHP
 public function beforeRender(Event $event) {
     // ...
-    $this->response->header(['Access-Control-Allow-Origin' => '*']);
+    $this->response->withHeader('Access-Control-Allow-Origin', '*');
 }
 ```
