@@ -178,6 +178,6 @@ If you do not want this, you can change this option but it is recommended to add
 ```PHP
 public function beforeRender(Event $event) {
     // ...
-    $this->response->withHeader('Access-Control-Allow-Origin', '*');
+    $this->response = $this->response->withHeader('Access-Control-Allow-Origin', '*');
 }
 ```

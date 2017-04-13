@@ -27,6 +27,6 @@ class ErrorController extends BaseErrorController
     public function beforeRender(Event $event)
     {
         parent::beforeRender($event);
-        $this->response->header(['Access-Control-Allow-Origin' => '*']);
+        $this->response = $this->response->withHeader('Access-Control-Allow-Origin', '*');
     }
 }
