@@ -46,8 +46,6 @@ By default the plugin authorize cors for all origins, all methods and all header
     'ExposeHeaders' => false, // don't accept personal headers
     'MaxAge' => 86400, // cache for 1 day
     'exceptionRenderer' => 'Cors\Error\AppExceptionRenderer', // Use ExeptionRenderer class of plugin
-    'ErrorController' => 'Cors\Controller\ErrorController', // Use ErrorController class of plugin
-]
 ```
 
 ### Change config
@@ -157,6 +155,8 @@ The  Access-Control-Max-Age header indicates how long the results of a preflight
 
 This option overload default `exceptionRenderer` in `app.php`.
 
+By default this class extends from `Error.exceptionRenderer` to add Cors Headers
+
 If you don't want to overload exceptionRenderer, You must write
 
 ```PHP
@@ -165,19 +165,4 @@ If you don't want to overload exceptionRenderer, You must write
 ]
 ```
 
-But you must read https://github.com/ozee31/cakephp-cors#errorcontroller
-
 [Read more](http://book.cakephp.org/3.0/en/development/errors.html#extend-the-baseerrorhandler)
-
-#### ErrorController
-
-By default, the plugin use an ErrorController (`Cors\Controller\ErrorController`) which extends from `App\Controller\ErrorController`.
-
-If you do not want this, you can change this option but it is recommended to add this code in your personal ErrorController
-
-```PHP
-public function beforeRender(Event $event) {
-    // ...
-    $this->response = $this->response->withHeader('Access-Control-Allow-Origin', '*');
-}
-```
