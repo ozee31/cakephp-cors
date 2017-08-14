@@ -18,7 +18,7 @@ class CorsMiddleware
                 ->withHeader('Access-Control-Allow-Credentials', $this->_allowCredentials())
                 ->withHeader('Access-Control-Max-Age', $this->_maxAge());
 
-            if ($request->is('options')) {
+            if (strtoupper($request->getMethod()) === 'OPTIONS') {
                 $response = $response
                     ->withHeader('Access-Control-Allow-Headers', $this->_allowHeaders($request))
                     ->withHeader('Access-Control-Allow-Methods', $this->_allowMethods())
