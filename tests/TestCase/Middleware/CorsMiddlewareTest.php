@@ -3,7 +3,7 @@ namespace Cors\TestCase\Middleware;
 
 use PHPUnit\Framework\TestCase;
 use Cake\Http\ServerRequestFactory;
-use Cake\Network\Response;
+use Cake\Http\Response;
 use Cors\Routing\Middleware\CorsMiddleware;
 use Cake\Core\Configure;
 
@@ -46,7 +46,7 @@ class CorsMiddlewareTest extends TestCase {
     {
         $this->_setServer(['REQUEST_METHOD' => 'GET']);
         $response = $this->_sendRequest();
-        $headersKeys = array_keys($response->header());
+        $headersKeys = array_keys($response->getHeaders());
 
         $this->assertContains('Access-Control-Allow-Origin', $headersKeys);
         $this->assertContains('Access-Control-Allow-Credentials', $headersKeys);
@@ -60,17 +60,17 @@ class CorsMiddlewareTest extends TestCase {
     {
         $this->_setServer(['REQUEST_METHOD' => 'GET']);
         $response = $this->_sendRequest();
-        $headers = $response->header();
+        $headers = $response->getHeaders();
 
-        $this->assertEquals(self::BASE_ORIGIN, $headers['Access-Control-Allow-Origin']);
-        $this->assertEquals('true', $headers['Access-Control-Allow-Credentials']);
-        $this->assertEquals(Configure::read('Cors.MaxAge'), $headers['Access-Control-Max-Age']);
+        $this->assertEquals(self::BASE_ORIGIN, current($headers['Access-Control-Allow-Origin']));
+        $this->assertEquals('true', current($headers['Access-Control-Allow-Credentials']));
+        $this->assertEquals(Configure::read('Cors.MaxAge'), current($headers['Access-Control-Max-Age']));
     }
 
     public function testExposeAllCorsHeadersIfIsAOptionsRequest()
     {
         $response = $this->_sendRequest();
-        $headersKeys = array_keys($response->header());
+        $headersKeys = array_keys($response->getHeaders());
 
         $this->assertContains('Access-Control-Allow-Origin', $headersKeys);
         $this->assertContains('Access-Control-Allow-Credentials', $headersKeys);
@@ -83,18 +83,18 @@ class CorsMiddlewareTest extends TestCase {
     public function testDefaultValuesIfIsAOptionsRequest()
     {
         $response = $this->_sendRequest();
-        $headers = $response->header();
+        $headers = $response->getHeaders();
 
         $this->assertEquals([], $headers['Access-Control-Allow-Headers']);
-        $this->assertEquals('GET, POST, PUT, PATCH, DELETE', $headers['Access-Control-Allow-Methods']);
-        $this->assertEquals('', $headers['Access-Control-Expose-Headers']);
+        $this->assertEquals('GET, POST, PUT, PATCH, DELETE', current($headers['Access-Control-Allow-Methods']));
+        $this->assertEquals('', current($headers['Access-Control-Expose-Headers']));
     }
 
     private function _sendRequestForOriginTest($originUrl, $allowUrl)
     {
         Configure::write('Cors.AllowOrigin', $allowUrl);
         $this->_setServer(['HTTP_ORIGIN' => $originUrl]);
-        return $this->_sendRequest()->header()['Access-Control-Allow-Origin'];
+        return $this->_sendRequest()->getHeaderLine('Access-Control-Allow-Origin');
     }
 
     public function testOriginDifferentAllKey()
@@ -142,42 +142,42 @@ class CorsMiddlewareTest extends TestCase {
     public function testCredentialsTrue()
     {
         Configure::write('Cors.AllowCredentials', true);
-        $responseAllowCredentials = $this->_sendRequest()->header()['Access-Control-Allow-Credentials'];
+        $responseAllowCredentials = $this->_sendRequest()->getHeaderLine('Access-Control-Allow-Credentials');
         $this->assertEquals('true', $responseAllowCredentials);
     }
 
     public function testCredentialsFalse()
     {
         Configure::write('Cors.AllowCredentials', false);
-        $responseAllowCredentials = $this->_sendRequest()->header()['Access-Control-Allow-Credentials'];
+        $responseAllowCredentials = $this->_sendRequest()->getHeaderLine('Access-Control-Allow-Credentials');
         $this->assertEquals('false', $responseAllowCredentials);
     }
 
     public function testMethodString()
     {
         Configure::write('Cors.AllowMethods', 'GET');
-        $responseAllowMethods = $this->_sendRequest()->header()['Access-Control-Allow-Methods'];
+        $responseAllowMethods = $this->_sendRequest()->getHeaderLine('Access-Control-Allow-Methods');
         $this->assertEquals('GET', $responseAllowMethods);
     }
 
     public function testMethodArray()
     {
         Configure::write('Cors.AllowMethods', ['GET', 'POST']);
-        $responseAllowMethods = $this->_sendRequest()->header()['Access-Control-Allow-Methods'];
+        $responseAllowMethods = $this->_sendRequest()->getHeaderLine('Access-Control-Allow-Methods');
         $this->assertEquals('GET, POST', $responseAllowMethods);
     }
 
     public function testAllowHeadersString()
     {
         Configure::write('Cors.AllowHeaders', 'authorization');
-        $responseRequestHeaders = $this->_sendRequest()->header()['Access-Control-Allow-Headers'];
+        $responseRequestHeaders = $this->_sendRequest()->getHeaderLine('Access-Control-Allow-Headers');
         $this->assertEquals('authorization', $responseRequestHeaders);
     }
 
     public function testAllowHeadersArray()
     {
         Configure::write('Cors.AllowHeaders', ['authorization', 'Content-Type']);
-        $responseRequestHeaders = $this->_sendRequest()->header()['Access-Control-Allow-Headers'];
+        $responseRequestHeaders = $this->_sendRequest()->getHeaderLine('Access-Control-Allow-Headers');
         $this->assertEquals('authorization, Content-Type', $responseRequestHeaders);
     }
 
@@ -185,42 +185,42 @@ class CorsMiddlewareTest extends TestCase {
     {
         Configure::write('Cors.AllowHeaders', true);
         $this->_setServer(['HTTP_ACCESS_CONTROL_REQUEST_HEADERS' => 'authorization']);
-        $responseRequestHeaders = $this->_sendRequest()->header()['Access-Control-Allow-Headers'];
+        $responseRequestHeaders = $this->_sendRequest()->getHeaderLine('Access-Control-Allow-Headers');
         $this->assertEquals('authorization', $responseRequestHeaders);
     }
 
     public function testExposeHeadersString()
     {
         Configure::write('Cors.ExposeHeaders', 'X-My-Custom-Header');
-        $responseExposeHeaders = $this->_sendRequest()->header()['Access-Control-Expose-Headers'];
+        $responseExposeHeaders = $this->_sendRequest()->getHeaderLine('Access-Control-Expose-Headers');
         $this->assertEquals('X-My-Custom-Header', $responseExposeHeaders);
     }
 
     public function testExposeHeadersArray()
     {
         Configure::write('Cors.ExposeHeaders', ['X-My-Custom-Header', 'X-Another-Custom-Header']);
-        $responseExposeHeaders = $this->_sendRequest()->header()['Access-Control-Expose-Headers'];
+        $responseExposeHeaders = $this->_sendRequest()->getHeaderLine('Access-Control-Expose-Headers');
         $this->assertEquals('X-My-Custom-Header, X-Another-Custom-Header', $responseExposeHeaders);
     }
 
     public function testExposeHeadersFalse()
     {
         Configure::write('Cors.ExposeHeaders', false);
-        $responseExposeHeaders = $this->_sendRequest()->header()['Access-Control-Expose-Headers'];
+        $responseExposeHeaders = $this->_sendRequest()->getHeaderLine('Access-Control-Expose-Headers');
         $this->assertEquals('', $responseExposeHeaders);
     }
 
     public function testMaxAge1Hour()
     {
         Configure::write('Cors.MaxAge', 3600);
-        $responseMaxAge = $this->_sendRequest()->header()['Access-Control-Max-Age'];
+        $responseMaxAge = $this->_sendRequest()->getHeaderLine('Access-Control-Max-Age');
         $this->assertEquals(3600, $responseMaxAge);
     }
 
     public function testMaxAgeFalse()
     {
         Configure::write('Cors.MaxAge', false);
-        $responseMaxAge = $this->_sendRequest()->header()['Access-Control-Max-Age'];
+        $responseMaxAge = $this->_sendRequest()->getHeaderLine('Access-Control-Max-Age');
         $this->assertEquals(0, $responseMaxAge);
     }
 }
