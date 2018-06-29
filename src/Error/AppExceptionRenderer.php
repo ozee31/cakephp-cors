@@ -7,6 +7,7 @@ use Cake\Network\Request;
 use Cake\Network\Response;
 use Cake\Routing\Router;
 use Exception;
+use Cors\Routing\Middleware\CorsMiddleware;
 
 function get_dynamic_parent() {
     return Configure::read('Error.baseExceptionRenderer');// return what you need
@@ -24,7 +25,11 @@ class AppExceptionRenderer extends BaseExceptionRenderer
     protected function _getController()
     {
         $controller = parent::_getController();
-        $controller->response = $controller->response->withHeader('Access-Control-Allow-Origin', '*');
+        $cors = new CorsMiddleware();
+        $controller->response = $cors(
+            $controller->request, $controller->response,
+            function($request, $response){ return $response; }
+        );
         return $controller;
     }
 }
