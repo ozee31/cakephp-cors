@@ -1,6 +1,7 @@
 <?php
 use Cake\Event\EventManager;
 use Cake\Core\Configure;
+use Cake\Routing\Middleware\RoutingMiddleware;
 use Cors\Routing\Middleware\CorsMiddleware;
 
 /**
@@ -24,6 +25,6 @@ if ($config['exceptionRenderer']) {
  */
 EventManager::instance()->on('Server.buildMiddleware',
     function ($event, $middleware) {
-        $middleware->add(new CorsMiddleware());
+        $middleware->insertBefore(RoutingMiddleware::class, new CorsMiddleware());
     }
 );
