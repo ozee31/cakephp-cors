@@ -25,6 +25,10 @@ if ($config['exceptionRenderer']) {
  */
 EventManager::instance()->on('Server.buildMiddleware',
     function ($event, $middleware) {
-        $middleware->insertBefore(RoutingMiddleware::class, new CorsMiddleware());
+        try {
+            $middleware->insertBefore(RoutingMiddleware::class, new CorsMiddleware());
+        } catch (\LogicException $exception) {
+            $middleware->add(new CorsMiddleware());
+        }
     }
 );
