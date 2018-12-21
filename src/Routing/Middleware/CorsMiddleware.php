@@ -17,12 +17,14 @@ class CorsMiddleware
                 ->withHeader('Access-Control-Allow-Origin', $this->_allowOrigin($request))
                 ->withHeader('Access-Control-Allow-Credentials', $this->_allowCredentials())
                 ->withHeader('Access-Control-Max-Age', $this->_maxAge())
-                ->withHeader('Access-Control-Allow-Headers', $this->_allowHeaders($request))
-                ->withHeader('Access-Control-Allow-Methods', $this->_allowMethods())
-                ->withHeader('Access-Control-Expose-Headers', $this->_exposeHeaders());
+                ->withHeader('Access-Control-Expose-Headers', $this->_exposeHeaders())
             ;
 
             if (strtoupper($request->getMethod()) === 'OPTIONS') {
+                $response = $response
+                    ->withHeader('Access-Control-Allow-Headers', $this->_allowHeaders($request))
+                    ->withHeader('Access-Control-Allow-Methods', $this->_allowMethods())
+                ;
                 return $response;
             }
         }
