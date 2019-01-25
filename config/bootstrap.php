@@ -15,7 +15,7 @@ $config = array_merge($defaultConfig, $personnalConfig);
 
 Configure::write('Cors', $config);
 
-if ($config['exceptionRenderer']) {
+if ($config['exceptionRenderer'] && Configure::read('Error.exceptionRenderer') != $config['exceptionRenderer']) {
     Configure::write('Error.baseExceptionRenderer', Configure::read('Error.exceptionRenderer'));
     Configure::write('Error.exceptionRenderer', $config['exceptionRenderer']);
 }
