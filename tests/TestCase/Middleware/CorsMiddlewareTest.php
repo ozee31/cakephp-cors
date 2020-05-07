@@ -1,11 +1,14 @@
 <?php
-namespace Cors\TestCase\Middleware;
+namespace Cors\Tests\TestCase\Middleware;
 
+use Cake\Http\Response;
 use PHPUnit\Framework\TestCase;
 use Cake\Http\ServerRequestFactory;
-use Cake\Http\Response;
-use Cors\Routing\Middleware\CorsMiddleware;
+use Cors\Middleware\CorsMiddleware;
 use Cake\Core\Configure;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class CorsMiddlewareTest extends TestCase {
 
@@ -13,7 +16,7 @@ class CorsMiddlewareTest extends TestCase {
 
     const BASE_ORIGIN = 'http://test.com';
 
-    public function setUp()
+    public function setUp(): Void
     {
         parent::setUp();
         $this->server = [
@@ -33,12 +36,9 @@ class CorsMiddlewareTest extends TestCase {
     private function _sendRequest()
     {
         $request = ServerRequestFactory::fromGlobals($this->server);
-        $response = new Response();
+        $handler = new RequestHandlerStub();
         $middleware = new CorsMiddleware();
-        $next = function ($request, $response) {
-            return $response;
-        };
-        $response = $middleware($request, $response, $next);
+        $response = $middleware->process($request, $handler);
         return $response;
     }
 
@@ -85,7 +85,7 @@ class CorsMiddlewareTest extends TestCase {
         $response = $this->_sendRequest();
         $headers = $response->getHeaders();
 
-        $this->assertEquals([], $headers['Access-Control-Allow-Headers']);
+        $this->assertEquals('', current($headers['Access-Control-Allow-Headers']));
         $this->assertEquals('GET, POST, PUT, PATCH, DELETE', current($headers['Access-Control-Allow-Methods']));
         $this->assertEquals('', current($headers['Access-Control-Expose-Headers']));
     }
@@ -222,5 +222,22 @@ class CorsMiddlewareTest extends TestCase {
         Configure::write('Cors.MaxAge', false);
         $responseMaxAge = $this->_sendRequest()->getHeaderLine('Access-Control-Max-Age');
         $this->assertEquals(0, $responseMaxAge);
+    }
+}
+
+class RequestHandlerStub implements RequestHandlerInterface
+{
+    public $callable;
+
+    public function __construct(?callable $callable = null)
+    {
+        $this->callable = $callable ?: function ($request) {
+            return new Response();
+        };
+    }
+
+    public function handle(ServerRequestInterface $request): ResponseInterface
+    {
+        return ($this->callable)($request);
     }
 }
