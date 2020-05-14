@@ -1,5 +1,5 @@
 <?php
-namespace Cors\Middleware;
+namespace Cors\Routing\Middleware;
 
 use Cake\Core\Configure;
 use Psr\Http\Message\ResponseInterface;
