@@ -1,10 +1,7 @@
 <?php
-namespace Cors\TestCase\Controller;
+namespace Cors\Tests\TestCase\Controller;
 
 use PHPUnit\Framework\TestCase;
-use Cake\Network\Request;
-use Cake\Network\Response;
-use Cake\Event\Event;
 
 class ErrorControllerTest extends TestCase
 {
