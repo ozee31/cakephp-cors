@@ -2,14 +2,16 @@
 
 [![Build Status](https://travis-ci.org/ozee31/cakephp-cors.svg?branch=master)](https://travis-ci.org/ozee31/cakephp-cors)
 
-A CakePHP (3.3+) plugin for activate cors domain in your application with [Middleware](http://book.cakephp.org/3.0/en/controllers/middleware.html).
+A CakePHP (4+) plugin for activate cors domain in your application with [Middleware](http://book.cakephp.org/3.0/en/controllers/middleware.html).
 
 [Learn more about CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
 
+**For cake 3.3+ use branch [cake-3](https://github.com/ozee31/cakephp-cors/tree/cake-3)**
+
 ## Requirements
 
-- PHP version 5.6 or higher
-- CakePhp 3.3 or higher
+- PHP version 7.2 or higher
+- CakePhp 4.0 or higher
 
 ## Installation
 
@@ -26,8 +28,12 @@ composer require ozee31/cakephp-cors
 Loading the Plugin
 
 ```PHP
-  // In config/bootstrap.php
-  Plugin::load('Cors', ['bootstrap' => true, 'routes' => false]);
+// In src/Application.php
+public function bootstrap(): void
+{
+    // code ...
+    $this->addPlugin('Cors');
+}
 ```
 
 By default the plugin authorize cors for all origins, all methods and all headers and caches all for one day.
