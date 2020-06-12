@@ -16,11 +16,16 @@ class CorsMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $response = $handler->handle($request);
+        if ($request->getHeader('Origin') && strtoupper($request->getMethod()) === 'OPTIONS') {
+            // Preflight request, no need to delegate control, return early
+            $response = (new Response());
+        } else {
+            // Calling $handler->handle() delegates control to the *next* middleware
+            // In your application's queue.
+            $response = $handler->handle($request);
+        }
 
-        $response = $this->addHeaders($request, $response);
-
-        return $response;
+        return $this->addHeaders($request, $response);
     }
 
     public function addHeaders(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
