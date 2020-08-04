@@ -2,6 +2,7 @@
 namespace Cors\Routing\Middleware;
 
 use Cake\Core\Configure;
+use Cake\Http\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
