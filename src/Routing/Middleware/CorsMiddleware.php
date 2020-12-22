@@ -6,6 +6,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Cake\Http\Response;
 
 class CorsMiddleware implements MiddlewareInterface
 {
@@ -16,7 +17,20 @@ class CorsMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $response = $handler->handle($request);
+        if (strtoupper($request->getMethod()) === 'OPTIONS') {
+            if (!array_intersect($request->getHeader("Access-Control-Request-Method"), Configure::read('Cors.AllowMethods'))) {
+                $response =  new Response([
+                    'status' => 403,
+                    'body' => 'Method Forbidden'
+                ]);
+            } else {
+                $response =  new Response([
+                    'status' => 200
+                ]);
+            }
+        } else {
+            $response = $handler->handle($request);
+        }
 
         $response = $this->addHeaders($request, $response);
 
