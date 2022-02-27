@@ -1,6 +1,6 @@
 {
     "name": "ozee31/cakephp-cors",
-    "description": "It's a pull request from ozee31/cakephp-cors that solve the issue about OPTIONS method. A CakePHP 4 plugin for activate cors domain in your application",
+    "description": "A CakePHP 4 plugin for activate cors domain in your application",
     "type": "cakephp-plugin",
     "require": {
         "php": ">=7.2.0",
